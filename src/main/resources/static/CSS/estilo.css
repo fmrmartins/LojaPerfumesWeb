@@ -1,0 +1,49 @@
+body{
+    background-color: #505050;
+    color: white;
+}
+a, a:visited{
+    color: yellow;
+    margin-left: 2%;
+    margin-top: 1%;
+}
+.table {
+    text-align: center;
+    color: white;    
+}
+h1, h4 {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    text-align: center;
+    color: red;
+}
+h5, h6 {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    text-align: center;
+    color: white;
+}
+p {
+    text-align: left;
+    color: white;
+}
+li {
+    text-align: center;
+}
+.pequeno {
+    width: 17%;
+    margin-top: 1%;
+}
+
+.medio {
+    width: 95%;
+    margin-bottom: 1%;
+    margin-top: 3%;
+}
+.caixa {
+border: 4px solid black;
+border-radius: 2px;
+padding-left: 130px;
+padding-right: 130px;
+padding-bottom: 20px;
+}

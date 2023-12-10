@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Novo Produto</title> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" 
+              rel="stylesheet" 
+              integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" 
+              crossorigin="anonymous">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link th:href="@{/css/}+'estilo.css'" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>        
+        <div class="col-sm-8" style="margin: auto">
+            <h1>Novo Produto</h1>             
+            <p>Nome: <input class="form-control" type="text" th:field="${produto.nome}" /> </p>  
+            <p>Descriçao: <textarea rows="2" class="form-control" th:field="${produto.descricao}" /> </p>     
+            <p>Marca: <input class="form-control" type="text" th:field="${produto.marca}" /> </p>
+            <p>Preço de custo: <input class="form-control" type="text" th:field="${produto.precoCusto}" /> </p>
+            <div class="row">
+                <div class="col">
+                    <p>Margem(%): <input class="form-control" type="text" th:field="${produto.margem}" /> </p> 
+                </div>
+                <div class="col">
+                    <p>Estoque: <input class="form-control" type="text" th:field="${produto.estoque}" /> </p> 
+                </div>
+            </div>
+            <a th:href="@{/}"><button type="submit" class="btn btn-primary pequeno" >Salvar</button></a>
+            <a th:href="@{/}"><button type="button" class="btn btn-primary pequeno" >Voltar</button></a>  
+        </div>
+    </body>
+</html>
