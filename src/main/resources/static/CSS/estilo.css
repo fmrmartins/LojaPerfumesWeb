@@ -31,8 +31,9 @@ li {
     text-align: center;
 }
 .pequeno {
-    width: 17%;
-    margin-top: 1%;
+    width: 20%;
+    margin-top: 0%;
+    text-align: center
 }
 
 .medio {

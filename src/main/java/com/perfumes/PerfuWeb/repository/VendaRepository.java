@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VendaRepository extends JpaRepository<Venda, Integer>  { 
     List<Venda> findByClienteId(Integer id);
+    
+    Venda findFirstByOrderByIdDesc();
 }

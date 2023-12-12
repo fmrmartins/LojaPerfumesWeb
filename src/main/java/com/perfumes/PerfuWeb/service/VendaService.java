@@ -32,5 +32,9 @@ public class VendaService {
     public void excluirVenda(Integer id) {
         Venda objEncontrado = buscarPorId(id);
         vendRepo.deleteById(objEncontrado.getId());
-    }        
+    }
+    
+    public Venda pegaUltimaVenda(){
+        return vendRepo.findFirstByOrderByIdDesc();
+    }
 }

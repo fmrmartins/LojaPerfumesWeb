@@ -2,9 +2,13 @@ package com.perfumes.PerfuWeb.controller;
 
 import org.springframework.ui.Model;
 import com.perfumes.PerfuWeb.modal.Cliente;
+import com.perfumes.PerfuWeb.modal.Item;
 import com.perfumes.PerfuWeb.modal.Produto;
+import com.perfumes.PerfuWeb.modal.Venda;
 import com.perfumes.PerfuWeb.service.ProdutoService;
 import com.perfumes.PerfuWeb.service.ClienteService;
+import com.perfumes.PerfuWeb.service.ItemService;
+import com.perfumes.PerfuWeb.service.VendaService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -27,8 +32,16 @@ public class PerfumesController {
     @Autowired
     ProdutoService prodServ;
     
+    @Autowired
+    VendaService vendServ;
+    
+    @Autowired
+    ItemService itemServ;
+    
     static List<Produto> carrinho = new ArrayList();
-
+    static double total;
+    Venda venda = new Venda();
+    
     @GetMapping("/")
     public String inicio() {
         return "index";
@@ -87,7 +100,7 @@ public class PerfumesController {
         return "redirect:/pesquiCli";
     }
 
-    @PostMapping("/pesqCliporNome")
+    @GetMapping("/pesqCliporNome")
     public String pesquisaClienteporNome(@RequestParam String nome, Model model) {
         List<Cliente> acheiCli = acheiCli = cliServ.buscarPorNome(nome);  
         model.addAttribute("cliente", new Cliente());
@@ -116,15 +129,16 @@ public class PerfumesController {
         return "redirect:/produtos";
     }
 
-    /*@PostMapping("/alteraProduto")
+    @PostMapping("/alteraProduto")
     public String alterarProduto(@ModelAttribute Produto prod, Model model) {
         prodServ.atualizar(prod.getId(), prod);
         return "redirect:/pesquiProd";
-    }*/
+    }
 
-    @PostMapping("/pesqProdporNome")
+    @GetMapping("/pesqProdporNome")
     public String pesquisaProdutoporNome(@RequestParam String nome, Model model) {
-        List<Produto> acheiProd = prodServ.buscarPorNome(nome);      
+        List<Produto> acheiProd = prodServ.buscarPorNome(nome); 
+        model.addAttribute("produto", new Produto());
         model.addAttribute("lista", acheiProd);
         return "pesquisaProd";
     }
@@ -146,24 +160,49 @@ public class PerfumesController {
     
     @PostMapping("/adicionarProd")
     public String encheCarrinho(Model model, @RequestParam String produtoId,
-            @RequestParam String clienteId) {
-        Integer idProd = Integer.parseInt(produtoId);        
-        carrinho.add(prodServ.buscarPorId(idProd));
+            @RequestParam Integer clienteId) {
+        Integer idProd = Integer.parseInt(produtoId); 
+        Produto acheiprod = prodServ.buscarPorId(idProd);
+        carrinho.add(acheiprod);
+        total = total - acheiprod.getPreco();        
         model.addAttribute("lista", carrinho);
         model.addAttribute("listaCli", cliServ.listarTodos());
         model.addAttribute("listaProd", prodServ.listarTodos());
-        //model.addAttribute("quant", quant);
-        //model.addAttribute("total", total);
+        model.addAttribute("cliIdSelecionado", clienteId);
         return "venda"; 
     }
     @GetMapping("/excluirProduto")
     public String excluirProdutoDoCarrinho(Model model, @RequestParam String id) {
         Integer idProd = Integer.parseInt(id);
-        carrinho.remove(prodServ.buscarPorId(idProd));
+        Produto acheiprod = prodServ.buscarPorId(idProd);
+        carrinho.remove(acheiprod);
+        total = total - acheiprod.getPreco();
         model.addAttribute("lista", carrinho);
         model.addAttribute("listaCli", cliServ.listarTodos());
         model.addAttribute("listaProd", prodServ.listarTodos());
         return "venda";
         
+    }
+    @GetMapping("/limpaCarrinho")
+    public String excluirTodosProdutosDoCarrinho(Model model) {
+              carrinho.clear();
+              total = 0;
+        return "index";
+    }
+    @PostMapping("/comprei")
+    public String comprafinalizada(@RequestParam Integer clienteId){
+        LocalDateTime diaHora = LocalDateTime.now();
+        venda.setCliente(cliServ.buscarPorId(clienteId));
+        venda.setTotal(String.valueOf(total));
+        venda.setDt_venda(diaHora.toString());
+        vendServ.criar(venda);
+        Venda vd = vendServ.pegaUltimaVenda();
+        for (Produto pd : carrinho) {
+            Item itv = new Item();
+            itv.setId_prod(pd.getId());
+            //itv.setQuantidade();
+            itv.setVenda(vd);
+        }
+       return"venda";  
     }
 }
