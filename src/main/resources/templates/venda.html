@@ -2,48 +2,49 @@
 <html>
     <head>
         <title>Venda de Produtos</title> 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" 
-              rel="stylesheet" 
-              integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" 
-              crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" 
+               integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous"> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link th:href="@{/css/}+'estilo.css'" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div class="container">
             <div class="col-sm-10" style="margin: auto">         
-                <h1>Venda de Produtos</h1>
-                <div class="row">
-                    <div class="col">
-                        <label id="Idcompra"> Id </label>   
-                    </div>                    
-                </div>
+                <h1>Venda de Produtos</h1>          
+                <form th:action="@{/adicionarProd}" th:object="${produto}" method="post">
+                    <div class="row">  
+                        <div class="col-sm-7">      
+                            <p> <select name="clienteId" class="form-control" id="selCliente">
+                                    <option value="">Selecione um Cliente</option>                           
+                                    <option th:each="cli : ${listaCli}" th:value="${cli.id}" th:text="${cli.nome}"></option> 
+                                </select> </p>
+                        </div>
+                        <div class="col-sm-3">                                                    
+                            <input name="total" type="text" id="txTotal" class="form-control" value="Total: R$ 0,00" disabled readonly>
+                        </div>
+                    </div>
 
-                <div class="row">  
-                    <div class="col-sm-7">      
-                        <p> <select name="selcli" class="form-control" id="selCliente" >
-                            <option value="0">Selecione um Cliente</option> 
-                            <option value="1">cliente 1</option> 
-                        </select> </p>
+
+                    <div class="row">
+                        <div class="col-sm-4">      
+                            <select name="produtoId" class="form-control" > 
+                               <!--- <option value="">Selecione um produto</option> -->
+                                <option th:each="prod : ${listaProd}" th:value="${prod.id}" th:text="${prod.nome}"></option>
+                            </select> 
+                        </div>
+                        <div class="col-sm-3">                                                    
+                            <input type="text" id="txPreco" class="form-control" disabled readonly>
+                        </div>
+                        <div class="col-sm-3">                                                    
+                            <p><input nome="quant" type="number" class="form-control" placeholder="Quantidade"></p>
+                        </div>
+                        <div class="col">                            
+                            <button type="submit" class="btn btn-primary">Adicionar</button>                           
+                        </div>
                     </div>
-                    <div class="col-sm-3">                                                    
-                        <input type="text" class="form-control" value="Total: R$ 0,00" disabled readonly>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-7">      
-                        <select name="selprod" class="form-control" id="selProduto" > 
-                            <option value="0">Selecione um produto</option> 
-                            <option value="1">produto 1</option> 
-                        </select> 
-                    </div>
-                    <div class="col-sm-3">                                                    
-                        <p><input type="number" class="form-control" placeholder="Quantidade"></p>
-                    </div>
-                    <div class="col">
-                        <a th:href="@{/}"><button type="submit" class="btn btn-primary">Adicionar</button></a>                           
-                    </div>           
-                </div>        
+                </form>
+                <button type="submit" class="btn btn-primary">Confirmar</button> 
+                <a th:href="@{/}"><button type="button" class="btn btn-primary" >Voltar</button></a>
                 <table class="table">
                     <thead>
                         <tr>
@@ -60,13 +61,14 @@
                             <td th:text="${prod.nome}"></td>
                             <td th:text="${prod.marca}"></td>
                             <td th:text="${prod.preco}"></td>
-                            <td><a th:href="@{'/excluirProduto?id=' + ${prod.id}}">Excluir</a></td>
+                            <td><a th:href="@{'/excluirProduto?id=' +  ${prod.id}}">Excluir</a></td>
                         </tr>
                     </tbody>
-                </table>
-                <a th:href="@{/}"><button type="submit" class="btn btn-primary">Confirmar</button></a>                
-                <a th:href="@{/}"><button type="button" class="btn btn-primary" >Voltar</button></a>
+                </table>                
             </div>
-        </div>               
+        </div>
+        <script>
+
+        </script>    
     </body>        
 </html>

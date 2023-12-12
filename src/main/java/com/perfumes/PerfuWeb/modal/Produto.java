@@ -26,8 +26,7 @@ public class Produto {
     
     private String nome;
     private String descricao;
-    private double precoCusto;
-    private String marca;
-    private double margem;
+    private double preco;
+    private String marca;    
     private Integer estoque;    
 }
