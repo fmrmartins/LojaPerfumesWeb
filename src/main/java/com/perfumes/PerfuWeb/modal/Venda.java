@@ -10,9 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Data
@@ -27,6 +29,8 @@ public class Venda {
     @ManyToOne
     @JoinColumn(name = "id_Cliente")
     private Cliente cliente;
-    private String dt_venda;
-    private String total;    
+    
+    @DateTimeFormat (pattern="dd-MMM-YYYY HH:mm")
+    private LocalDateTime dt_venda;
+    private double total;    
 }

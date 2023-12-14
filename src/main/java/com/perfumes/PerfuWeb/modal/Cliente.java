@@ -24,9 +24,16 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     
+    
     private String nome;
+
+    
     private String cpf;
     private String dtNascimento;
-    private String telefone;
-    private String email;    
+
+   
+    private String telefone;    
+    
+    
+    private String email;
 }

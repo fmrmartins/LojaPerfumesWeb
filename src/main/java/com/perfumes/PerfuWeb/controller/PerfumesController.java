@@ -31,178 +31,150 @@ public class PerfumesController {
 
     @Autowired
     ProdutoService prodServ;
-    
+
     @Autowired
     VendaService vendServ;
-    
+
     @Autowired
     ItemService itemServ;
-    
-    static List<Produto> carrinho = new ArrayList();
+
+    static List<Item> carrinho = new ArrayList();
     static double total;
+    static Integer lead;
+
     Venda venda = new Venda();
-    
+
     @GetMapping("/")
     public String inicio() {
         return "index";
     }
 
-    @GetMapping("/clientes")
-    public String exibirCadCliente(Model model) {
-        model.addAttribute("cliente", new Cliente());
-        return "clientes";
-    }
-
-    @GetMapping("/produtos")
-    public String exibirCadProduto(Model model) {
-        model.addAttribute("produto", new Produto());
-        return "produtos";
-    }
-
     @GetMapping("/vendas")
     public String exibirCadVenda(Model model) {
-        model.addAttribute("cli", new Cliente());
+        venda.setTotal(total);
+        model.addAttribute("cliente", new Cliente());
+        model.addAttribute("itv", new Item());
+        model.addAttribute("item", new Item());
+        model.addAttribute("venda", venda);
         model.addAttribute("produto", new Produto());
-        model.addAttribute("listaCli", cliServ.listarTodos());
         model.addAttribute("listaProd", prodServ.listarTodos());
         return "venda";
     }
-
-    @GetMapping("/pesquiCli")
-    public String exibirPesquisaCli(Model model) {
-        model.addAttribute("cliente", new Cliente());
-        model.addAttribute("lista", cliServ.listarTodos());
-        return "pesquisaCli";
-    }
-
-    @GetMapping("/pesquiProd")
-    public String exibirPesquisaProd(Model model) {
+    
+    @GetMapping("/vendasComId")
+    public String exibirCadVendaSelecionado(@RequestParam Integer id, Model model) {
+        lead = id;
+        venda.setTotal(total);
+        model.addAttribute("cliente", cliServ.buscarPorId(id));
+        model.addAttribute("itv", new Item());
+        model.addAttribute("item", new Item());
+        model.addAttribute("venda", venda);
+        model.addAttribute("lista", carrinho);
         model.addAttribute("produto", new Produto());
-        model.addAttribute("lista", prodServ.listarTodos());
-        return "pesquisaProd";
+        model.addAttribute("listaProd", prodServ.listarTodos());
+        return "venda";
     }
 
     @GetMapping("/pesquiVend")
     public String exibirPesquisaVend(Model model) {
-        model.addAttribute("produto", new Produto());
+        model.addAttribute("cliente", new Cliente());
+        model.addAttribute("lista", vendServ.listarTodos());
         return "listaVendas";
     }
 
-    @PostMapping("/gravarCliente")
-    public String gravarCliente(@ModelAttribute Cliente cli, Model model) {
-        cliServ.criar(cli);
-        return "redirect:/clientes";
-    }
+    @GetMapping("/pequisaVenda")
+    public String pesquisaVendaCliente(@RequestParam String nome, Model model) {
+        List<Venda> acheiVend = new ArrayList();
+        List<Cliente> acheiCli = cliServ.buscarPorNome(nome);
+        
+        if (!acheiCli.isEmpty()) {
+            for (Cliente c : acheiCli) {
+                acheiVend = vendServ.buscarPorNomeCliente(c.getId());
+            }
+        } else {
+            acheiVend = vendServ.listarTodos();
+        }
 
-    @PostMapping("/alteraCliente")
-    public String alterarCliente(@ModelAttribute Cliente cli, Model model) {
-        cliServ.atualizar(cli.getId(), cli);
-        return "redirect:/pesquiCli";
-    }
-
-    @GetMapping("/pesqCliporNome")
-    public String pesquisaClienteporNome(@RequestParam String nome, Model model) {
-        List<Cliente> acheiCli = acheiCli = cliServ.buscarPorNome(nome);  
         model.addAttribute("cliente", new Cliente());
-        model.addAttribute("lista", acheiCli);
-        return "pesquisaCli";
+        model.addAttribute("lista", acheiVend);
+        return "listaVendas";
     }
 
-    @GetMapping("/excluiCli")
-    public String excluirCliente(Model model, @RequestParam String id) {
-        Integer idCliente = Integer.parseInt(id);
-        cliServ.excluir(idCliente);
-        return "redirect:/pesquiCli";
-    }
-
-    @GetMapping("/alteraCli")
-    public String alterarCliente(Model model, @RequestParam String id) {
-        Integer idCli = Integer.parseInt(id);
-        Cliente acheiCli = cliServ.buscarPorId(idCli);
-        model.addAttribute("cliente", acheiCli);
-        return "alterarCli";
-    }
-
-    @PostMapping("/gravarProduto")
-    public String gravarProduto(@ModelAttribute Produto prod, Model model) {
-        prodServ.criar(prod);
-        return "redirect:/produtos";
-    }
-
-    @PostMapping("/alteraProduto")
-    public String alterarProduto(@ModelAttribute Produto prod, Model model) {
-        prodServ.atualizar(prod.getId(), prod);
-        return "redirect:/pesquiProd";
-    }
-
-    @GetMapping("/pesqProdporNome")
-    public String pesquisaProdutoporNome(@RequestParam String nome, Model model) {
-        List<Produto> acheiProd = prodServ.buscarPorNome(nome); 
-        model.addAttribute("produto", new Produto());
-        model.addAttribute("lista", acheiProd);
-        return "pesquisaProd";
-    }
-
-    @GetMapping("/excluiProd")
-    public String excluirProduto(Model model, @RequestParam String id) {
-        Integer idProd = Integer.parseInt(id);
-        prodServ.excluirProduto(idProd);
-        return "redirect:/pesquiProd";
-    }
-
-    @GetMapping("/alteraProd")
-    public String alterarProduto(Model model, @RequestParam String id) {
-        Integer idProd = Integer.parseInt(id);
-        Produto acheiProd = prodServ.buscarPorId(idProd);
-        model.addAttribute("produto", acheiProd);
-        return "alterarProd";
-    }
-    
     @PostMapping("/adicionarProd")
     public String encheCarrinho(Model model, @RequestParam String produtoId,
-            @RequestParam Integer clienteId) {
-        Integer idProd = Integer.parseInt(produtoId); 
+            @RequestParam String quantidade) {
+        Integer idProd = Integer.parseInt(produtoId);
         Produto acheiprod = prodServ.buscarPorId(idProd);
-        carrinho.add(acheiprod);
-        total = total - acheiprod.getPreco();        
-        model.addAttribute("lista", carrinho);
-        model.addAttribute("listaCli", cliServ.listarTodos());
-        model.addAttribute("listaProd", prodServ.listarTodos());
-        model.addAttribute("cliIdSelecionado", clienteId);
-        return "venda"; 
+        Item itc = new Item();
+        itc.setQuantidade(Integer.parseInt(quantidade));
+        itc.setProduto(acheiprod);
+        itemServ.criar(itc);
+        carrinho.add(itc);
+        total = total + acheiprod.getPreco() * itc.getQuantidade();
+        venda.setTotal(total);
+        model.addAttribute("cliente", cliServ.buscarPorId(lead));
+        model.addAttribute("itv", new Item());
+        model.addAttribute("item", new Item());
+        model.addAttribute("venda", venda);
+        model.addAttribute("lista", carrinho);        
+        model.addAttribute("listaProd", prodServ.listarTodos());      
+        return "venda";
     }
+
     @GetMapping("/excluirProduto")
     public String excluirProdutoDoCarrinho(Model model, @RequestParam String id) {
-        Integer idProd = Integer.parseInt(id);
-        Produto acheiprod = prodServ.buscarPorId(idProd);
-        carrinho.remove(acheiprod);
-        total = total - acheiprod.getPreco();
+        Integer idItem = Integer.parseInt(id);
+        Item acheItv = itemServ.buscarPorId(idItem);
+        carrinho.remove(acheItv);
+        itemServ.excluir(acheItv.getId());
+        total = total - acheItv.getProduto().getPreco();
+        venda.setTotal(total);
+        model.addAttribute("cliente", cliServ.buscarPorId(lead));
+        model.addAttribute("itv", new Item());
+        model.addAttribute("item", new Item());
+        model.addAttribute("venda", venda);
         model.addAttribute("lista", carrinho);
         model.addAttribute("listaCli", cliServ.listarTodos());
-        model.addAttribute("listaProd", prodServ.listarTodos());
+        model.addAttribute("listaProd", prodServ.listarTodos());    
         return "venda";
-        
     }
+
     @GetMapping("/limpaCarrinho")
     public String excluirTodosProdutosDoCarrinho(Model model) {
-              carrinho.clear();
-              total = 0;
+        carrinho.clear();
+        total = 0.00;
         return "index";
     }
-    @PostMapping("/comprei")
-    public String comprafinalizada(@RequestParam Integer clienteId){
+
+    @GetMapping("/comprei")
+    public String comprafinalizada() {
         LocalDateTime diaHora = LocalDateTime.now();
-        venda.setCliente(cliServ.buscarPorId(clienteId));
-        venda.setTotal(String.valueOf(total));
-        venda.setDt_venda(diaHora.toString());
+        venda.setCliente(cliServ.buscarPorId(lead));
+        venda.setTotal(total);
+        venda.setDt_venda(diaHora);
         vendServ.criar(venda);
         Venda vd = vendServ.pegaUltimaVenda();
-        for (Produto pd : carrinho) {
-            Item itv = new Item();
-            itv.setId_prod(pd.getId());
-            //itv.setQuantidade();
-            itv.setVenda(vd);
+        for (Item it : carrinho) {
+            it.setVenda(vd);
+            itemServ.atualizar(it.getId(),it);
         }
-       return"venda";  
+        carrinho.clear();
+        total = 0.00;
+        return "redirect:/vendas";
     }
+
+    @GetMapping("/exibir")
+    public String mostraDetalhesVenda(Model model, @RequestParam String id) {
+        Integer idVenda = Integer.parseInt(id);
+        Venda encontrado = vendServ.buscarPorId(idVenda);
+        Item itc = new Item();
+        List<Item> itens = new ArrayList<>();
+        itens = itemServ.buscarPorIdVenda(idVenda);
+
+        model.addAttribute("venda", encontrado);
+        model.addAttribute("item", itc);
+        model.addAttribute("itens", itens);
+        return "exibirDetalhes";
+    }
+
 }

@@ -6,6 +6,7 @@
               integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous"> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link th:href="@{/css/}+'estilo.css'" rel="stylesheet" type="text/css"/>
+
     </head>
     <body>
         <div class="container">
@@ -14,57 +15,55 @@
                 <form onsubmit="return validaCampoAdicionar();" th:action="@{/adicionarProd}" method="post">
                     <div class="row">  
                         <div class="col-sm-7">      
-                            <p> <select name="clienteId" class="form-control" id="selCliente">
-                                    <option value="">Selecione um Cliente</option>                           
-                                    <option th:each="cli : ${listaCli}" th:value="${cli.id}" th:text="${cli.nome}" th:selected="${cli.id == cliIdSelecionado}"></option> 
-                                </select> </p>
+                            <p> <Input th:name="clienteId" class="form-control" th:value="${cliente.nome}" id="selCliente" placeholder="Adcione um cliente" disabled readonly>                                                          
                         </div>
-                        <div class="col-sm-3">                                                    
-                            <input type="hidden" th:value="${prod.id}" class="form-control" disabled readonly>
+                        <div class="col-sm-2"> 
+                            <a th:href="@{/pesquiCli}"><button type="button" class="btn btn-primary" >Buscar Cliente</button></a>
+                        </div>
+                        <div class="col-sm-2">                                                    
+                            <input type="text" style="text-align: center" th:value="'R$ '+${#numbers.formatDecimal(venda.total,1,'POINT',2,'COMMA')}" class="form-control" disabled readonly>
                         </div>
                     </div>
-
-
-                    <div class="row">
-                        <div class="col-sm-1"> 
-                            <label>Produto:</label>
-                        </div>
-                        <div class="col-sm-4">      
-                            <select name="produtoId" class="form-control" > 
+                    <div class="row">                        
+                        <div class="col-sm-7">      
+                            <select name="produtoId" class="form-control" id="selProduto"> 
                                 <option value="">Selecione um produto</option>
                                 <option th:each="prod : ${listaProd}" th:value="${prod.id}" th:text="${prod.nome}"></option>
                             </select> 
-                        </div>                       
-                        <div class="col-sm-1"> 
-                            <label>Quantidade:</label>
-                        </div>
+                        </div>                  
+
                         <div class="col-sm-2">
-                            <p><input id="quant" nome="quant" type="number" value="1" min="1" class="form-control"></p>
+                            <p><input type="number" id="quant" min="1" class="form-control" th:field="${item.quantidade}" placeholder="Quantidade"></p>
                         </div>
                         <div class="col">                            
-                            <button type="submit" class="btn btn-primary">Adicionar</button>                           
+                            <button type="submit" class="btn btn-primary">Adicionar Produtos</button>                           
                         </div>
                     </div>
-                </form>
-                <button type="submit" class="btn btn-primary">Confirmar</button> 
-                <a th:href="@{/limpaCarrinho}"><button type="button" class="btn btn-primary" >Voltar</button></a>
+                </form>     
+
+                <a th:href="@{'/comprei?clienteId=' + ${cliIdSelecionado}}"><button type="button" class="btn btn-primary">Confirmar</button></a> 
+                <a th:href="@{/limpaCarrinho}"><button type="button" class="btn btn-primary" >Voltar</button></a>                
+
+
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Produto</th>
                             <th>Marca</th>
+                            <th>Quantidade</th>
                             <th>Preço</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="prod : ${lista}">
-                            <td th:text="${prod.id}"></td>
-                            <td th:text="${prod.nome}"></td>
-                            <td th:text="${prod.marca}"></td>
-                            <td th:text="${prod.preco}"></td>
-                            <td><a th:href="@{'/excluirProduto?id=' +  ${prod.id}}">Excluir</a></td>
+                        <tr th:each="itv : ${lista}">
+                            <td th:text="${itv.produto.id}"></td>
+                            <td th:text="${itv.produto.nome}"></td>
+                            <td th:text="${itv.produto.marca}"></td>
+                            <td th:text="${itv.quantidade}"></td>
+                            <td th:text="${itv.produto.preco}"></td>
+                            <td><a th:href="@{'/excluirProduto?id=' +  ${itv.id}}">Excluir</a></td>
                         </tr>
                     </tbody>
                 </table>                
@@ -72,13 +71,23 @@
         </div>
         <script>
             function validaCampoAdicionar() {
-                let pd = document.getElementsByName('produtoId').value;
-                if (pd.valueOf()) {
+                let selpd = document.getElementsByName('produtoId').value;
+                let selcli = document.getElementsById('selCliente').value;
+                let quanti = document.getElementsById('quant').value;
+
+                if (selcli.length <= 0) {
+                    alert("Escolha um cliente!");
+                    return false;
+                } else if (selpd.length <= 0) {
                     alert("Escolha um Produto!");
+                    return false;
+                } else if (quanti.length <= 0) {
+                    alert("informe a quantidade!");
                     return false;
                 } else {
                     return true;
                 }
+            }
         </script>    
     </body>        
 </html>

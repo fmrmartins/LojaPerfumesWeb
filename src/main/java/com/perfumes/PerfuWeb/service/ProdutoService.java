@@ -31,7 +31,7 @@ public class ProdutoService {
     }
     
     public List<Produto> buscarPorNome(String nome) {
-        return prodRepo.findByNomeContaining(nome);
+        return prodRepo.findByNomeContainingIgnoreCase(nome);
                 
     }
 

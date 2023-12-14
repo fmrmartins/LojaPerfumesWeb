@@ -30,10 +30,22 @@ public class ItemService {
 
     public Item buscarPorId(Integer id) {
         return itemRepo.findById(id).orElseThrow();
-    }
+    }    
 
-    public void excluirProduto(Integer id) {
+    public void excluir(Integer id) {
         Item objEncontrado = buscarPorId(id);
         itemRepo.deleteById(objEncontrado.getId());
-    }    
+    }
+    
+    public List<Item> buscarPorIdVenda(Integer id) {
+        return itemRepo.findByVendaId(id);
+    }
+     public Item atualizar(Integer id, Item itemVeio) {
+        Item achei = buscarPorId(id);
+        achei.setVenda(itemVeio.getVenda());
+        achei.setProduto(itemVeio.getProduto());
+        achei.setQuantidade(itemVeio.getQuantidade());        
+        itemRepo.save(achei);
+        return achei;
+    }
 }

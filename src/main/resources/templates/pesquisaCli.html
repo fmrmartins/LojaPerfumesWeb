@@ -14,7 +14,7 @@
                 <form th:action="@{/pesqCliporNome}" th:object="${cliente}" method="get">
                     <div class="row">                 
                         <div class="col-sm-6">  
-                            <input th:field="${cliente.nome}" nome="nomecli" type="text" id="jasdghjasgnome" class="form-control">
+                            <input th:field="${cliente.nome}" nome="nomecli" type="text" id="nome" class="form-control" placeholder="Pesquise pelo nome do cliente">
                         </div>
                         <div class="col">  
                             <button type="submit" class="btn btn-primary pequeno" >Filtrar</button>
@@ -31,6 +31,7 @@
                             <th>Telefone</th>
                             <th>Edita</th>
                             <th>Deleta</th>
+                            <th>Venda</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +42,7 @@
                             <td th:text="${cli.telefone}"></td>
                             <td><a th:href="@{'/alteraCli?id=' + ${cli.id}}">Alterar</a></td>
                             <td><a th:href="@{'/excluiCli?id=' + ${cli.id}}">Excluir</a></td>
+                            <td><a th:href="@{'/vendasComId?id=' + ${cli.id}}">Selecionar</a></td>
                         </tr>
                     </tbody>
                 </table>                             

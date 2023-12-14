@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
-   public List<Cliente> findByNomeContaining(String nomeCli);    
+   public List<Cliente> findByNomeContainingIgnoreCase(String nomeCli);    
 }

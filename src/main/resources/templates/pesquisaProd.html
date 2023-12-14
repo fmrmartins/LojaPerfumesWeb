@@ -14,7 +14,7 @@
                 <form th:action="@{/pesqProdporNome}" th:object="${produto}"  method="get">
                     <div class="row">  
                         <div class="col-sm-6">                             
-                          <p>Nome: <input th:field="${produto.nome}" type="text" nome="nomeprod" class="form-control" placeholder="Pesquise pelo nome do produto" /> </p>    
+                          <input th:field="${produto.nome}" type="text" nome="nomeprod" class="form-control" placeholder="Pesquise pelo nome do produto" />   
                         </div>
                         <div class="col">                            
                             <button type="submit" class="btn btn-primary pequeno">Filtrar</button>

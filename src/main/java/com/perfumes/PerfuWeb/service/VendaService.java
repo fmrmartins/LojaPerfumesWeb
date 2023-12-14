@@ -1,5 +1,6 @@
 package com.perfumes.PerfuWeb.service;
 
+import com.perfumes.PerfuWeb.modal.Cliente;
 import com.perfumes.PerfuWeb.modal.Venda;
 import com.perfumes.PerfuWeb.repository.VendaRepository;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,9 @@ public class VendaService {
     
     public Venda pegaUltimaVenda(){
         return vendRepo.findFirstByOrderByIdDesc();
+    }
+    
+     public List<Venda> buscarPorNomeCliente(Integer id) {
+        return vendRepo.findByClienteId(id);
     }
 }

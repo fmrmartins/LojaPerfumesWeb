@@ -11,17 +11,45 @@
     <body>       
         <div class="col-sm-8" style="margin: auto">
             <h1>Alterar Cliente</h1>
-            <form th:action="@{/alteraCliente}" th:object="${cliente}" method="post">
+            <form onsubmit="return validarCampos();" th:action="@{/alteraCliente}" th:object="${cliente}" method="post">
                 <p>ID: <b><span th:text="${cliente.id}" /></b></p> 
-                <p>Nome: <input class="form-control" type="text" th:field="${cliente.nome}" /> </p>  
-                <p>CPF: <input class="form-control" type="text" th:field="${cliente.cpf}" /> </p>     
-                <p>Data Nascimento: <input class="form-control" type="date" th:field="${cliente.dtNascimento}" /> </p>  
-                <p>Telefone: <input class="form-control" type="text" th:field="${cliente.telefone}" /> </p>
-                <p>Email: <input class="form-control" type="text" th:field="${cliente.email}" /> </p>
+                <p>Nome: <input class="form-control" id="txNome" type="text" th:field="${cliente.nome}" /> </p>  
+                <p>CPF: <input class="form-control" id="txCpf" type="text" th:field="${cliente.cpf}" /> </p>     
+                <p>Data Nascimento: <input class="form-control" id="txDtn" type="date" th:field="${cliente.dtNascimento}" /> </p>  
+                <p>Telefone: <input class="form-control" id="tel" type="tel" th:field="${cliente.telefone}" /> </p>
+                <p>Email: <input class="form-control" id="txEmail" type="email" th:field="${cliente.email}" /> </p>
                 <input type="hidden" th:field="${cliente.id}">
                 <button type="submit" class="btn btn-primary pequeno" >Salvar</button>            
                 <a th:href="@{/}"><button type="button" class="btn btn-primary pequeno" >Voltar</button></a>
             </form>
         </div>
+        <script>
+            function validarCampos() {
+                let nome = document.getElementById('txNome').value;
+                let cpf = document.getElementById('txCpf').value;
+                let dtn = document.getElementById('txDtn').value;
+                let tel = document.getElementById('tel').value;
+                let email = document.getElementById('txEmail').value;
+                if (nome.length <= 0) {
+                    alert("Digite um nome!");
+                    return false;
+                } else if (cpf.length <= 0) {
+                    alert("Digite um CPF!");
+                    return false;
+                } else if (dtn === "") {
+                    alert("Digite uma Data de Nascimento!");
+                    return false;
+                } else if (tel.length <= 0) {
+                    alert("Digite um telefone!");
+                    return false;
+                } else if (email.length <= 0) {
+                    alert("Digite um email!");
+                    return false;
+                } else {
+                    alert("Cliente inserido!");
+                    return true;
+                }
+            }           
+        </script>
     </body>
 </html>

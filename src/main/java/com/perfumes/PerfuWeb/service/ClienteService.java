@@ -31,7 +31,7 @@ public class ClienteService {
     }
 
     public List<Cliente> buscarPorNome(String nomeC) {
-        return cliRepo.findByNomeContaining(nomeC);                
+        return cliRepo.findByNomeContainingIgnoreCase(nomeC);                
     }
 
     public void excluir(Integer id) {
