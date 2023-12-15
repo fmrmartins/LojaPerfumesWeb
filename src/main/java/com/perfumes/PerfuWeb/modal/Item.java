@@ -1,8 +1,5 @@
 package com.perfumes.PerfuWeb.modal;
-/**
- *
- * @author Fabio
- */
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ *
+ * @author Fabio
+ */
 @Entity
 @Data
 @NoArgsConstructor

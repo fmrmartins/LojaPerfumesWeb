@@ -103,8 +103,8 @@ public class PerfumesController {
     @PostMapping("/adicionarProd")
     public String encheCarrinho(Model model, @RequestParam String produtoId,
             @RequestParam String quantidade) {
-        Integer idProd = Integer.parseInt(produtoId);
-        Produto acheiprod = prodServ.buscarPorId(idProd);
+        Integer idP = Integer.parseInt(produtoId);
+        Produto acheiprod = prodServ.buscarPorId(idP);
         Item itc = new Item();
         itc.setQuantidade(Integer.parseInt(quantidade));
         itc.setProduto(acheiprod);

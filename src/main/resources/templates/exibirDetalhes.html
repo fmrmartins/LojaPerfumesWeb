@@ -9,16 +9,14 @@
                     </head>
                     <body>                        
                         <div class="row">
-                            <div class="col-sm-4" style="margin: 2%">
+                            <div class="col-sm-6" style="margin: auto">
                                 <h1>Detalhes da Venda</h1>
                                 <p>ID: <b><span th:text="${venda.id}" /></b></p>
                                 <p>Data: <b><span th:text="${#temporals.format(venda.dt_venda, 'dd/MM/yyyy HH:mm')}" /></b></p>
                                 <p>Total: <b><span th:text="${venda.total}" /></b></p> 
                                 <p>Cliente: <b><span th:text="${venda.cliente.nome}" /></b></p> 
                                 <p>Telefone: <b><span th:text="${venda.cliente.telefone}" /></b></p>
-                                <p>Email: <b><span th:text="${venda.cliente.email}" /></b></p>                
-                            </div>
-                            <div class="col-sm-6" style="margin: 2%">
+                                <p>Email: <b><span th:text="${venda.cliente.email}" /></b></p>           
                                 <h1>Itens Comprados</h1>
                                 <ul>
                                     <li th:each="item : ${itens}">
@@ -30,8 +28,8 @@
                                         </p>                        
                                     </li>
                                 </ul>
-                            </div>
-                            <a th:href="@{/pesquiVend}"><button type="button" class="btn btn-primary pequeno"> Voltar </button></a>
+                                 <a th:href="@{/pesquiVend}"><button type="button" class="btn btn-primary pequeno"> Voltar </button></a>
+                            </div>                           
                         </div>
                     </body>
-                    </html>    
+</html>    

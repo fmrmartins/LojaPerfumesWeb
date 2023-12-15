@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>PerfuWeb</name>
     <description>Uma cadastro de venda de perfumes web</description>
+    
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -70,6 +71,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>${artifactId}</finalName>
     </build>
 
 </project>
